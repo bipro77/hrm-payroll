@@ -70,7 +70,6 @@ public class User {
 
     /**
      * Optional link to Employee profile.
-     *
      * - Owner side of the relationship (FK: employee_id)
      * - Enforces one-to-one mapping via unique constraint
      * - Lazy loading to avoid unnecessary joins
