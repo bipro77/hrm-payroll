@@ -1,0 +1,30 @@
+#GET http://localhost:8080/api/hello
+
+
+GET http://localhost:8080/api/employees
+//Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+
+
+#PUT http://localhost:8080/api/employees/1
+#Content-Type: application/json
+#
+#{
+#  "name": "Updated Name",
+#  "email": "updated@gmail.com",
+#  "department": "HR",
+#  "designation": "Manager"
+#}
+
+//DELETE http://localhost:8080/api/employees/1
+
+
+#POST http://localhost:8080/api/employees
+#Content-Type: application/json
+#
+#{
+#  "name": "Biprojit",
+#  "email": "bipro@gmail.com",
+#  "department": "IT",
+#  "designation": "Developer"
+#}
+
