@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/employees")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173") // allow frontend
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -52,9 +53,9 @@ public class EmployeeController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public PagedResponse<EmployeeDto> getEmployees(
-            @RequestParam int page,
-            @RequestParam int size,
-            @RequestParam String sortBy) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
 

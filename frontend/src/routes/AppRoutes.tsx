@@ -1,51 +1,27 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import EmployeePage from "../views/employees/EmployeePage";
 import LoginPage from "../views/auth/LoginPage";
-
-/**
- * Simple auth check
- */
-const isAuthenticated = () => {
-  return !!localStorage.getItem("token");
-};
-
-/**
- * Protected Route wrapper
- */
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  return isAuthenticated() ? children : <Navigate to="/login" replace />;
-};
+import DefaultLayout from "../layout/DefaultLayout";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/login" element={<LoginPage />} />
 
-      {/* Default route */}
       <Route
         path="/"
         element={
-          isAuthenticated()
-            ? <Navigate to="/employees" replace />
-            : <Navigate to="/login" replace />
-        }
-      />
-
-      {/* Login */}
-      <Route path="/login" element={<LoginPage />} />
-
-      {/* Protected route */}
-      <Route
-        path="/employees"
-        element={
           <ProtectedRoute>
-            <EmployeePage />
+            <DefaultLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<Navigate to="/employees" replace />} />
+        <Route path="employees" element={<EmployeePage />} />
+      </Route>
 
-      {/* Fallback (ALWAYS LAST) */}
       <Route path="*" element={<h1>404 Not Found</h1>} />
-
     </Routes>
   );
 };

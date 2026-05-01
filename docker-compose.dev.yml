@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  hrm-db:
+    image: postgres:16
+    container_name: hrm-db
+    environment:
+      POSTGRES_DB: hrm_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 00000000
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"

@@ -1,49 +1,64 @@
-version: "3.8"
-
 services:
 
-  db:
-    image: postgres:16.2
+  hrm-db:
+    image: postgres:16
     container_name: hrm-db
     restart: always
-
     environment:
-      POSTGRES_DB: hrm_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 00000000
-
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     ports:
-      - "5432:5432"
-
+      - "5432:5432"   # optional (remove in strict production)
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - hrm_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"   # optional (remove in strict production)
 
   backend:
     build:
       context: ./backend
     container_name: hrm-backend
-
+    restart: always
+    depends_on:
+      hrm-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "8080:8080"
-
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/hrm_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 00000000
+      SPRING_PROFILES_ACTIVE: prod
 
-    depends_on:
-      - db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://hrm-db:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
 
   frontend:
     build:
       context: ./frontend
     container_name: hrm-frontend
-
+    restart: always
     ports:
       - "3000:80"
-
     depends_on:
       - backend
 
 volumes:
-  db_data:
+  hrm_db_data:

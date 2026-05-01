@@ -1,0 +1,29 @@
+.app-layout {
+  min-height: 100vh;
+  background: var(--cui-body-bg);
+}
+
+.app-sidebar {
+  --cui-sidebar-width: 16rem;
+}
+
+.app-wrapper {
+  min-width: 0;
+  padding-left: var(--cui-sidebar-width, 16rem);
+  transition: padding-left 0.15s ease-in-out;
+}
+
+.app-header {
+  min-height: 4rem;
+  background: var(--cui-body-bg);
+}
+
+.app-body {
+  min-width: 0;
+}
+
+@media (max-width: 991.98px) {
+  .app-wrapper {
+    padding-left: 0;
+  }
+}
